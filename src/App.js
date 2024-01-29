@@ -1,24 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+import Cart from "./Pages/Cart/Cart";
+import NotFound from "./Pages/NotFound/NotFound";
+import Product from "./Pages/Product/Product";
+import Products from "./Pages/Products/Products";
+import Navbar from "./Components/Navbar";
+import {Routes, Route,useNavigate, createSearchParams} from "react-router-dom";
+import { useCart } from "./Context/Cart";
 
 function App() {
+  const navigate = useNavigate();
+  const { cartItemCount } = useCart()
+
+  const onSearch = (searchQuery) => {
+    navigate(`/?${createSearchParams({ q: searchQuery })}`)
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+    <Navbar onSearch={onSearch} cartItemCount={cartItemCount()} />
+      <Routes>
+        <Route path="/" element={<Products />} />
+        <Route path="/Product/:productId" element={<Product />} />
+        <Route path="/Cart" element={<Cart />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </>
   );
 }
 
